@@ -16,11 +16,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func GiveInfo(p packet.Packet, Key *string, conn net.Conn) (task.TaskResult, error) {
+func GiveInfo(p packet.Packet, Key *string, conn net.Conn) (task.TaskResult, error) { // the first packet, insert user info
 	logger.Info("GiveInfo: ", zap.Any("message", p.GetMessage()))
 	np := packet.CheckIsWork(p)
 	ClientInfo := client.PacketClientInfo(np)
-	if (ClientInfo.KeyNum == "") || (ClientInfo.KeyNum == "null") || (ClientInfo.KeyNum == "NoKey") {
+	if (ClientInfo.KeyNum == "") || (ClientInfo.KeyNum == "null") || (ClientInfo.KeyNum == "NoKey") { // assign a new key(uuid)
 		ClientInfo.KeyNum = strings.Replace(uuid.New().String(), "-", "", -1)
 	}
 	query.Checkindex(ClientInfo.KeyNum, p.GetipAddress(), p.GetMacAddress())
@@ -37,7 +37,7 @@ func GiveInfo(p packet.Packet, Key *string, conn net.Conn) (task.TaskResult, err
 		Work:       task.OPEN_CHECK_THREAD,
 		Message:    ClientInfo.KeyNum,
 	}
-	err := clientsearchsend.SendTCPtoClient(send_packet.Fluent(), conn)
+	err := clientsearchsend.SendTCPtoClient(send_packet.Fluent(), conn) // send ack(OPEN_CHECK_THREAD) to client
 	if err != nil {
 		return task.FAIL, err
 	}

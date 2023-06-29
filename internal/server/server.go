@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func Main() {
+func Main() { // initialize & gracefully exit
 	serverinit()
 	Quit := make(chan os.Signal, 1)
 	Connection_close := make(chan int, 1)
@@ -27,8 +27,8 @@ func Main() {
 	<-Quit
 	cancel()
 	fmt.Println("Server is shutting down...")
-	servershutdown()
-	select {
+	servershutdown() //gracefully exit
+	select { // 類似mutex 看兩種情況誰先到
 	case <-Connection_close:
 		logger.Info("Connection closed")
 	case <-time.After(5 * time.Second):

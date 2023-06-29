@@ -25,7 +25,7 @@ var Udp_enable bool
 var Task_enable bool
 var Task_channel map[string](chan string)
 
-func Connect_init() int {
+func Connect_init() int { // detect error
 	var err error
 	if Tcp_enable, err = fflag.FFLAG.FeatureEnabled("client_tcp"); Tcp_enable && err == nil {
 		logger.Info("tcp is enabled")
@@ -118,7 +118,7 @@ func Conn_task_server_start(c chan string, task_channel map[string](chan string)
 	}
 }
 
-func Connect_start(ctx context.Context, Connection_close_chan chan<- int) int {
+func Connect_start(ctx context.Context, Connection_close_chan chan<- int) int { //listen, go to a new routine
 	wg := new(sync.WaitGroup)
 	defer wg.Done()
 	wg.Add(2)

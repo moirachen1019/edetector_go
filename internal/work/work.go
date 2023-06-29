@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-var WrokMap map[task.TaskType]func(packet.Packet, *string, net.Conn) (task.TaskResult, error)
+var WrokMap map[task.TaskType]func(packet.Packet, *string, net.Conn) (task.TaskResult, error) //mapping: TaskType <-> function
 
 func init() {
 	WrokMap = map[task.TaskType]func(packet.Packet, *string, net.Conn) (task.TaskResult, error){

@@ -30,7 +30,7 @@ func handleTCPRequest(conn net.Conn, task_chan chan string) {
 	defer func() {
 		Key = nil
 	}()
-	if task_chan != nil {
+	if task_chan != nil { // receive task_chan and print
 		go func() {
 			for {
 				select {
