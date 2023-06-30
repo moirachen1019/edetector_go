@@ -30,7 +30,6 @@ type DataPacket struct {
 	// Packet is a struct that contains the packet data
 	MacAddress string
 	IpAddress  string
-	Rkey       string
 	Work       task.TaskType
 	Message    string
 	Raw_data   []byte
@@ -79,6 +78,10 @@ func (p *WorkPacket) NewPacket(data []byte, buf []byte) error {
 	// fmt.Println("function", string(data[40:40+nullIndex]))
 	p.Work = task.GetTaskType(string(data[40 : 40+nullIndex]))
 	nullIndex = bytes.IndexByte(data[64:], 0)
+	// if p.Work == task.UNDEFINE {
+	// 	type_error := errors.New("invalid task type" + string(data[40 : 40+nullIndex]))
+	// 	return type_error
+	// }
 	if nullIndex == -1 {
 		return error
 	}
@@ -97,22 +100,17 @@ func (p *DataPacket) NewPacket(data []byte, buf []byte) error {
 		return error
 	}
 	p.IpAddress = string(data[20 : 20+nullIndex])
-	nullIndex = bytes.IndexByte(data[40:73], 0)
+	nullIndex = bytes.IndexByte(data[40:64], 0)
 	if nullIndex == -1 {
 		return error
 	}
-	p.Rkey = string(data[40 : 40+nullIndex])
-	nullIndex = bytes.IndexByte(data[73:97], 0)
+	p.Work = task.GetTaskType(string(data[40 : 40+nullIndex]))
+	nullIndex = bytes.IndexByte(data[64:], 0)
 	if nullIndex == -1 {
-		return error
-	}
-	p.Work = task.GetTaskType(string(data[73 : 73+nullIndex]))
-	nullIndex = bytes.IndexByte(data[97:], 0)
-	if nullIndex == -1 {
-		p.Message = string(data[97:])
+		p.Message = string(data[64:])
 
 	} else {
-		p.Message = string(data[97 : 97+nullIndex])
+		p.Message = string(data[64 : 64+nullIndex])
 	}
 	p.Raw_data = buf
 	return nil
@@ -214,7 +212,7 @@ func (p *WorkPacket) GetRKey() string {
 	return p.Rkey
 }
 func (p *DataPacket) GetRKey() string {
-	return p.Rkey
+	return "null"
 }
 func (p *TaskPacket) GetRKey() string {
 	return p.Key

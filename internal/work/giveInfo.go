@@ -16,7 +16,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func GiveInfo(p packet.Packet, Key *string, conn net.Conn) (task.TaskResult, error) { // the first packet, insert user info
+func GiveInfo(p packet.Packet, Key *string, conn net.Conn) (task.TaskResult, error) { // the first packet: insert user info
 	logger.Info("GiveInfo: ", zap.Any("message", p.GetMessage()))
 	np := packet.CheckIsWork(p)
 	ClientInfo := client.PacketClientInfo(np)
