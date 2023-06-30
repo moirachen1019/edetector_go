@@ -79,10 +79,6 @@ func (p *WorkPacket) NewPacket(data []byte, buf []byte) error {
 	// fmt.Println("function", string(data[40:40+nullIndex]))
 	p.Work = task.GetTaskType(string(data[40 : 40+nullIndex]))
 	nullIndex = bytes.IndexByte(data[64:], 0)
-	// if p.Work == task.UNDEFINE {
-	// 	type_error := errors.New("invalid task type" + string(data[40 : 40+nullIndex]))
-	// 	return type_error
-	// }
 	if nullIndex == -1 {
 		return error
 	}
